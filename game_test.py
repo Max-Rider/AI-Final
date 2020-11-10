@@ -5,6 +5,7 @@ The world is created using Tiled and pyTMX.
 Features to test here include initial player movement, player attacking, enemy AI movement, and enemy attacking.
 """
 import sys
+import random
 import pygame
 from pygame.locals import *
 from pytmx.util_pygame import load_pygame
@@ -16,6 +17,10 @@ def main():
     playerYpos = 500
     dXpos = 0
     dYpos = 0
+    #Enemy Positioning
+    enemyX = random.randint(0,500)
+    enemyY = random.randint(0,500)
+    enemyX_change = 0
     # Game loop
     running = True
     while running:
@@ -34,7 +39,11 @@ def main():
         draw_map()
         #(playerXpos, playerYpos)
         player((playerXpos, playerYpos)) #draw player and update postion
+        #create enemy
+        enemy(enemyX, enemyY)
         pygame.display.update() # Makes sure the screen is always being updated
+        
+       
 # end main()
 
 # start getLocProperties
@@ -59,6 +68,9 @@ def player(position):
     #print(position)
     screen.blit(playerImg, position) # draws player to screen
 # end player()
+def enemy(x, y):
+    enemyImg = pygame.image.load("character PNGs\\goblin.png") 
+    screen.blit(enemyImg, (x,y))
 
 # start movePlayer()
 def movePlayer(xPos, yPos, keyPressed):
