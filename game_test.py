@@ -7,6 +7,9 @@ Features to test here include initial player movement, player attacking, enemy A
 import sys
 import random
 import pygame
+import math
+from player import Player
+from game import Game
 from pygame.locals import *
 from pytmx.util_pygame import load_pygame
 
@@ -15,32 +18,39 @@ def main():
     #initial position for player
     playerXpos = 320 
     playerYpos = 500
-    dXpos = 0
-    dYpos = 0
     #Enemy Positioning
     enemyX = random.randint(0,500)
     enemyY = random.randint(0,500)
     enemyX_change = 0
+    
+    player = Player(playerXpos, playerYpos) # Create player object
+    
     # Game loop
     running = True
     while running:
         screen.fill((255,255,255)) # Screen starts white before doing anything else
         keyPressed = pygame.key.get_pressed() # get key presses for movement
+        mousePressed = pygame.mouse.get_pressed()[0]
+        mouseX, mouseY = pygame.mouse.get_pos()
         #event loop -- looks for events like key presses or quit
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             
         #player movement
-        playerXY = movePlayer(playerXpos, playerYpos, keyPressed)
+        playerXY = player.move(playerXpos, playerYpos, keyPressed, tmxdata)
         playerXpos = playerXY[0]
         playerYpos = playerXY[1]
         
-        draw_map()
-        #(playerXpos, playerYpos)
-        player((playerXpos, playerYpos)) #draw player and update postion
+        draw_map() #draws the map to the screen
+        #draw player and update postion
+        player.draw((playerXpos, playerYpos), screen)
+        
         #create enemy
         enemy(enemyX, enemyY)
+        
+        playerAttack(playerXpos, playerYpos, mouseX, mouseY, mousePressed)
+        
         pygame.display.update() # Makes sure the screen is always being updated
         
        
@@ -48,51 +58,84 @@ def main():
 
 # start getLocProperties
 # gets the properties of the given location on the map i.e. solid for walls so the player cant move through them
-def getLocProperties(tmxdata, xPos, yPos):
-    xTile = xPos // 16
-    yTile = yPos // 16
-    wallProp = tmxdata.get_tile_properties(xTile, yTile, 0)
-    stairProp = tmxdata.get_tile_properties(xTile, yTile, 1)
+# def getLocProperties(tmxdata, xPos, yPos):
+#     xTile = xPos // 16
+#     yTile = yPos // 16
+#     wallProp = tmxdata.get_tile_properties(xTile, yTile, 0)
+#     stairProp = tmxdata.get_tile_properties(xTile, yTile, 1)
     
-    if wallProp is None: # set default properties if none are found
-        wallProp = {"solid":0, "stairs":0}
-        stairProp = {"solid":0, "stairs":0}
-    return (wallProp, stairProp)
+#     if wallProp is None: # set default properties if none are found
+#         wallProp = {"solid":0, "stairs":0}
+#         stairProp = {"solid":0, "stairs":0}
+#     return (wallProp, stairProp)
 # end getLocProperties
 
 # start player()
 # loads player into bottom middle of the world
 # NOTE player sprite is pretty small, maybe try and scale it up
-def player(position):
-    playerImg = pygame.image.load("tile PNGs\\blueWizard.png") # Load player sprite
-    #print(position)
-    screen.blit(playerImg, position) # draws player to screen
+# def player(position):
+#     playerImg = pygame.image.load("tile PNGs\\blueWizard.png") # Load player sprite
+#     #print(position)
+#     screen.blit(playerImg, position) # draws player to screen
 # end player()
+
 def enemy(x, y):
     enemyImg = pygame.image.load("character PNGs\\goblin.png") 
     screen.blit(enemyImg, (x,y))
 
+class fireBall:
+    def __init__(self, playerX, playerY, mouseX, mouseY):
+        self.x = playerX
+        self.y = playerY
+        self.speed = 10
+        self.angle = math.atan2(mouseY-playerY, mouseX-playerX)
+        self.xVel = math.cos(self.angle) * self.speed
+        self.yVel = math.sin(self.angle) * self.speed
+        
+    def update(self):
+        self.x += int(self.xVel)
+        self.y += int(self.yVel)
+        pygame.draw.circle(screen, (0,0,0), (self.x, self.y), 10)
+
+
 # start movePlayer()
-def movePlayer(xPos, yPos, keyPressed):
-    if keyPressed[ord("a")]: # check what key was pressed
-        westTile = getLocProperties(tmxdata, xPos-2, yPos+11) #find the tile next to the player and get its properties
-        if westTile[0]['solid'] == 0: # if not solid keep moving, stop otherwise
-            xPos += -1
-    if keyPressed[ord("d")]:
-        eastTile = getLocProperties(tmxdata, xPos+22, yPos+11)
-        if eastTile[0]['solid'] == 0:
-            xPos += 1
-    if keyPressed[ord("w")]:
-        northTile = getLocProperties(tmxdata, xPos, yPos-2)
-        if northTile[0]['solid'] == 0:
-            yPos += -1
-    if keyPressed[ord("s")]:
-        southTile = getLocProperties(tmxdata, xPos+2, yPos+22)
-        if southTile[0]['solid'] == 0:
-            yPos += 1
-    return(xPos, yPos)
+# def movePlayer(xPos, yPos, keyPressed):
+#     if keyPressed[ord("a")]: # check what key was pressed
+#         westTile = getLocProperties(tmxdata, xPos-2, yPos+11) #find the tile next to the player and get its properties
+#         if westTile[0]['solid'] == 0: # if not solid keep moving, stop otherwise
+#             xPos += -1
+#     if keyPressed[ord("d")]:
+#         eastTile = getLocProperties(tmxdata, xPos+22, yPos+11)
+#         if eastTile[0]['solid'] == 0:
+#             xPos += 1
+#     if keyPressed[ord("w")]:
+#         northTile = getLocProperties(tmxdata, xPos, yPos-2)
+#         if northTile[0]['solid'] == 0:
+#             yPos += -1
+#     if keyPressed[ord("s")]:
+#         southTile = getLocProperties(tmxdata, xPos+2, yPos+22)
+#         if southTile[0]['solid'] == 0:
+#             yPos += 1
+#     return(xPos, yPos)
 # end movePlayer()
 
+
+"""
+Consider changing attack buttons to arrow keys instead of mouse
+"""
+def playerAttack(playerX, playerY, mouseX, mouseY, mousePressed):
+    if mousePressed:
+        fireBallList.append(fireBall(playerX, playerY, mouseX, mouseY))
+    for fb in fireBallList:
+        #pygame.time.wait(5)
+        fb.update()
+        if fb.x < 20 or fb.y < 20 or fb.x > 610 or fb.y > 610: #delete orb if it leaves world bounds -- 
+                                                               #need to make this so it deltes when it hits an enemy or a wall
+            fireBallList.pop(fireBallList.index(fb))
+
+"""
+Using this for now but there is also a drawMap function in the Game class from game.py
+"""
 # start draw_map()
 def draw_map():
     #tmxdata = load_pygame("rooms\\basic_room.tmx") # Load map from tmx file
@@ -110,14 +153,17 @@ if __name__ == "__main__":
     #init pygame
     pygame.init()
     #create screen (width, height)
+    #Game().runGame() # UNCOMMENT THIS TO RUN WITH GAME CLASS INSTEAD -- CURRENTLY UNECESSARY
     screenSize = (width, height)
     screen = pygame.display.set_mode(screenSize)
     # Window title
     pygame.display.set_caption("Untitled Rogue-Like game")
     tmxdata = load_pygame("rooms\\basic_room.tmx") # Load map from tmx file
+    fireBallList = []
     # To set window icon: 
     # icon = pygame.image.load("image.png")
     # pygame.display.set_icon(icon)
     clock = pygame.time.Clock()
+    startTicks = pygame.time.get_ticks()
     main()  
     pygame.quit()
