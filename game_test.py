@@ -32,6 +32,8 @@ def main():
         keyPressed = pygame.key.get_pressed() # get key presses for movement
         mousePressed = pygame.mouse.get_pressed()[0]
         mouseX, mouseY = pygame.mouse.get_pos()
+        
+        
         #event loop -- looks for events like key presses or quit
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -87,15 +89,22 @@ class fireBall:
     def __init__(self, playerX, playerY, mouseX, mouseY):
         self.x = playerX
         self.y = playerY
-        self.speed = 10
+        self.speed = 5
         self.angle = math.atan2(mouseY-playerY, mouseX-playerX)
         self.xVel = math.cos(self.angle) * self.speed
         self.yVel = math.sin(self.angle) * self.speed
+        self.fireBallTimer = 0.1
         
-    def update(self):
+    def update(self, dt):
         self.x += int(self.xVel)
         self.y += int(self.yVel)
+        
+        # fbTimer = self.fireBallTimer - dt
+        # if fbTimer <= 0:
+        #     print("SHHOOOOTT HEERRRR")
+        #     #wafbTimer = 0
         pygame.draw.circle(screen, (0,0,0), (self.x, self.y), 10)
+        # fbTimer = 0.1
 
 
 # start movePlayer()
@@ -128,7 +137,9 @@ def playerAttack(playerX, playerY, mouseX, mouseY, mousePressed):
         fireBallList.append(fireBall(playerX, playerY, mouseX, mouseY))
     for fb in fireBallList:
         #pygame.time.wait(5)
-        fb.update()
+        #print("before update")
+        fb.update(dt)
+        #print("after update")
         if fb.x < 20 or fb.y < 20 or fb.x > 610 or fb.y > 610: #delete orb if it leaves world bounds -- 
                                                                #need to make this so it deltes when it hits an enemy or a wall
             fireBallList.pop(fireBallList.index(fb))
@@ -159,11 +170,14 @@ if __name__ == "__main__":
     # Window title
     pygame.display.set_caption("Untitled Rogue-Like game")
     tmxdata = load_pygame("rooms\\basic_room.tmx") # Load map from tmx file
-    fireBallList = []
+    fireBallList = [] # list of fire ball sprites
+    
+    fireBallTimer = 0.1
     # To set window icon: 
     # icon = pygame.image.load("image.png")
     # pygame.display.set_icon(icon)
     clock = pygame.time.Clock()
+    dt = clock.tick(60)/1000 # dt = time since last tick in milliseconds
     startTicks = pygame.time.get_ticks()
     main()  
     pygame.quit()

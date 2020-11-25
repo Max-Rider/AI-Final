@@ -11,7 +11,7 @@ class Player:
         self.image = pygame.image.load("tile PNGs\\blueWizard.png")
         self.x = x
         self.y = y
-        #self.speed
+        self.speed = 10
     
     def draw(self, XYpos, screen):
         screen.blit(self.image, XYpos)
@@ -30,23 +30,22 @@ class Player:
     
     def move(self, x, y, keyPressed, tmxdata):
         if keyPressed[ord("a")]: # check what key was pressed
-            westTile = self.getMapProperties(x-2, y+11) #find the tile next to the player and get its properties
+            westTile = self.getMapProperties(x-5, y+11) #find the tile next to the player and get its properties
             if westTile[0]['solid'] == 0: # if not solid keep moving, stop otherwise
-                x += -10
+                x += -self.speed
         if keyPressed[ord("d")]:
-            eastTile = self.getMapProperties(x+22, y+11)
+            eastTile = self.getMapProperties(x+24, y+22)
             if eastTile[0]['solid'] == 0:
-                x += 10
+                x += self.speed
         if keyPressed[ord("w")]:
-            northTile = self.getMapProperties(x, y-2)
+            northTile = self.getMapProperties(x, y)
             if northTile[0]['solid'] == 0:
-                y += -10
+                y += -self.speed
         if keyPressed[ord("s")]:
-            southTile = self.getMapProperties(x+2, y+22)
+            southTile = self.getMapProperties(x-2, y+32)
             if southTile[0]['solid'] == 0:
-                y += 10
+                y += self.speed
         return(x, y)
     
     
-    # def attack():
-    #     pass
+    #def attack(self, dt):  
