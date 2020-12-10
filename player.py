@@ -20,6 +20,7 @@ class Player:
         xTile = x // 16
         yTile = y // 16
         
+        
         wallProp = game.Game().tmxdata.get_tile_properties(xTile, yTile, 0)
         stairProp = game.Game().tmxdata.get_tile_properties(xTile, yTile, 1)
         #print("got wall props")
