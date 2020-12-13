@@ -63,8 +63,15 @@ class Enemy():
     def getRewardVal(self, state, world):
         """
         given a state, get the reward value for that state
+        create rewardArrs in game.py and use those in testing
+        
+        world == rewardArr for given environment
         """
-        pass
+        x, y = state
+        
+        reward = world[x][y]
+        
+        return reward
     
     def moveAgent(self, x, y, tmxdata):
         """

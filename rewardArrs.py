@@ -10,7 +10,7 @@ class Rewards:
     # The values of the array are calculated as (maxReward - 5*dist)
     # where the max reward is 100 and dist is the disance of the (i,j) from (x,y)
     # where (x,y) is the goal/player position #
-    def trainer0RewardArr(self, x, y, size):
+    def trainerRewardArr(self, x, y, size):
         """
         function to automate the process of creating a 20x20 array of 
         reward values that converge on the player position 
@@ -24,7 +24,6 @@ class Rewards:
         Then, for each point in the grid with coordinates i,j you enter 
         (max value - distance from x,y to i,j), 
         so the neighbors of * have maxvalue -1, their neighbors have maxvalue -2, etc. 
-        
         """
         x = x // 16
         y = y // 16
