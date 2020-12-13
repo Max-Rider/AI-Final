@@ -4,8 +4,9 @@ File for enemy functions (AI functionality for movement and attacks and things)
 import pygame
 import game
 from pygame.locals import *
-#from rewardArrs import Rewards
+from rewardArrs import Rewards
 from pyqlearning.qlearning.greedy_q_learning import GreedyQLearning
+from pyqlearning.q_learning import QLearning
 from pytmx.util_pygame import load_pygame
     
     
@@ -73,6 +74,11 @@ class Enemy():
         
         return reward
     
+    def getQvals():
+        pass
+    
+    
+    
     def moveAgent(self, x, y, tmxdata):
         """
         Similar to 'update' function in qlearningAgents.py from hw
@@ -98,5 +104,3 @@ class Enemy():
         
         # returns a tuple of coordinates that the main game loop uses to update the position
         return (x, y)
-        
-        pass
