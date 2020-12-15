@@ -1,0 +1,32 @@
+
+
+**NOTE** The project runs but the AI functionality is not complete and is not hooked up, do not run this project expecting to be fully functional
+
+
+
+
+This project has a couple dependencies to be able to run it:
+
+PyGame
+PyQLearning
+PyTMX
+
+
+Dependency installation commands:
+
+PyGame:
+	Follow installation instructions for your machine on this website: https://www.pygame.org/wiki/GettingStarted
+
+
+PyQLearning:
+	pip install pyqlearning
+
+
+PyTMX:
+	pip install pytmx
+
+
+To run the current working build of the project run the game_test.py file
+
+
+To view the github page for this project use this link: https://github.com/Max-Rider/AI-Final

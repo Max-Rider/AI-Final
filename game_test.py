@@ -22,7 +22,6 @@ def main():
     #Enemy Positioning
     enemyX = random.randint(0,500)
     enemyY = random.randint(0,500)
-    enemyX_change = 0
     
     player = Player(playerXpos, playerYpos) # Create player object
     enemy = Enemy(enemyX, enemyY)
