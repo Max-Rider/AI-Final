@@ -15,9 +15,32 @@ class Enemy():
         self.image = pygame.image.load("character PNGs\\goblin.png")
         self.x = x
         self.y = y
+        self.path = [self.x, self.y]
+        self.walkCount = 0
+        self.vel = 3
+        self.hitbox = (self.x + 17, self.y + 2, 31, 57) # NEW
+        self.health = 1000
+        self.visible = True
     
     def draw(self, XYpos, screen):
         screen.blit(self.image, XYpos)
+        
+        if self.visible:
+        # Drawing the health bar of the enemy.
+            pygame.draw.rect(screen, (255,0,0), (self.hitbox[0], self.hitbox[1] - 20, 50, 10))
+
+        # Substract from the health bar width each time enemy is hit
+            pygame.draw.rect(screen, (0,255,0), (self.hitbox[0], self.hitbox[1] - 20, 50 - (5 * (10 - self.health)), 10))
+            
+        # Creating a hitbox around the character.
+            self.hitbox = (self.x + 15, self.y + 10, 29, 52)
+            
+    def hit(self):
+        if self.health > 0:
+            self.health -= 1
+        else:
+            self.visible = False
+        print('Enemy hit')
     
     
     # used to tell when an adjacent tile is a wall or not
