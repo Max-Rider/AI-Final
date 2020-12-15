@@ -11,13 +11,20 @@ from pytmx.util_pygame import load_pygame
     
     
 class Enemy():
-    def __init__(self):
-        pass
+    def __init__(self, x, y):
+        self.image = pygame.image.load("character PNGs\\goblin.png")
+        self.x = x
+        self.y = y
     
+    def draw(self, XYpos, screen):
+        screen.blit(self.image, XYpos)
+    
+    
+    # used to tell when an adjacent tile is a wall or not
     def getMapProperties(self, x, y):
-        xTile = x // 16
+        # tile size is 16x16 so dividing the coordinates by 16 gives the tile #
+        xTile = x // 16 
         yTile = y // 16
-        
         
         wallProp = game.Game().tmxdata.get_tile_properties(xTile, yTile, 0)
         #print("got wall props")
@@ -74,11 +81,26 @@ class Enemy():
         
         return reward
     
-    def getQvals():
+    
+    def getQvals(self):
+        return QLearning.get_q_df()
+    
+    def checkForEnvDrift(self):
+        """
+        function to detect environmental drift;
+        
+        Search the entire state space for a change in rewards compared to the
+        original environment
+        """
         pass
     
-    
-    
+    def performPrioritizedSweeping(self):
+        """
+        given a change in the environment, perform a prioritized sweep of the new
+        environment and update the value functions of state, action pairs
+        """
+        pass
+       
     def moveAgent(self, x, y, tmxdata):
         """
         Similar to 'update' function in qlearningAgents.py from hw
@@ -100,7 +122,7 @@ class Enemy():
         
         legalActions = self.getLegalActions(x, y)
         
-        GreedyQLearning.select_action((x, y), legalActions)
+        action = GreedyQLearning.select_action((x, y), legalActions)
         
         # returns a tuple of coordinates that the main game loop uses to update the position
         return (x, y)

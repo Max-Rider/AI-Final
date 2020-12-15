@@ -9,6 +9,7 @@ import random
 import pygame
 import math
 from player import Player
+from enemy import Enemy
 from game import Game
 from pygame.locals import *
 from pytmx.util_pygame import load_pygame
@@ -24,6 +25,7 @@ def main():
     enemyX_change = 0
     
     player = Player(playerXpos, playerYpos) # Create player object
+    enemy = Enemy(enemyX, enemyY)
     
     # Game loop
     running = True
@@ -49,7 +51,7 @@ def main():
         player.draw((playerXpos, playerYpos), screen)
         
         #create enemy
-        enemy(enemyX, enemyY)
+        enemy.draw((enemyX, enemyY), screen)
         
         playerAttack(playerXpos, playerYpos, mouseX, mouseY, mousePressed)
         
@@ -80,10 +82,6 @@ def main():
 #     #print(position)
 #     screen.blit(playerImg, position) # draws player to screen
 # end player()
-
-def enemy(x, y):
-    enemyImg = pygame.image.load("character PNGs\\goblin.png") 
-    screen.blit(enemyImg, (x,y))
 
 class fireBall:
     def __init__(self, playerX, playerY, mouseX, mouseY):
