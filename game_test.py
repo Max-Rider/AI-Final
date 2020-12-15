@@ -59,29 +59,6 @@ def main():
        
 # end main()
 
-# start getLocProperties
-# gets the properties of the given location on the map i.e. solid for walls so the player cant move through them
-# def getLocProperties(tmxdata, xPos, yPos):
-#     xTile = xPos // 16
-#     yTile = yPos // 16
-#     wallProp = tmxdata.get_tile_properties(xTile, yTile, 0)
-#     stairProp = tmxdata.get_tile_properties(xTile, yTile, 1)
-    
-#     if wallProp is None: # set default properties if none are found
-#         wallProp = {"solid":0, "stairs":0}
-#         stairProp = {"solid":0, "stairs":0}
-#     return (wallProp, stairProp)
-# end getLocProperties
-
-# start player()
-# loads player into bottom middle of the world
-# NOTE player sprite is pretty small, maybe try and scale it up
-# def player(position):
-#     playerImg = pygame.image.load("tile PNGs\\blueWizard.png") # Load player sprite
-#     #print(position)
-#     screen.blit(playerImg, position) # draws player to screen
-# end player()
-
 class fireBall:
     def __init__(self, playerX, playerY, mouseX, mouseY):
         self.x = playerX
@@ -102,29 +79,6 @@ class fireBall:
         #     #wafbTimer = 0
         pygame.draw.circle(screen, (0,0,0), (self.x, self.y), 10)
         # fbTimer = 0.1
-
-
-# start movePlayer()
-# def movePlayer(xPos, yPos, keyPressed):
-#     if keyPressed[ord("a")]: # check what key was pressed
-#         westTile = getLocProperties(tmxdata, xPos-2, yPos+11) #find the tile next to the player and get its properties
-#         if westTile[0]['solid'] == 0: # if not solid keep moving, stop otherwise
-#             xPos += -1
-#     if keyPressed[ord("d")]:
-#         eastTile = getLocProperties(tmxdata, xPos+22, yPos+11)
-#         if eastTile[0]['solid'] == 0:
-#             xPos += 1
-#     if keyPressed[ord("w")]:
-#         northTile = getLocProperties(tmxdata, xPos, yPos-2)
-#         if northTile[0]['solid'] == 0:
-#             yPos += -1
-#     if keyPressed[ord("s")]:
-#         southTile = getLocProperties(tmxdata, xPos+2, yPos+22)
-#         if southTile[0]['solid'] == 0:
-#             yPos += 1
-#     return(xPos, yPos)
-# end movePlayer()
-
 
 """
 Consider changing attack buttons to arrow keys instead of mouse
